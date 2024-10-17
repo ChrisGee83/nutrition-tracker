@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal Nutrition Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Basic Reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 20px;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styling */
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333333;
+        }
+
+        /* Form Styling */
+        .food-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .food-form select, .food-form input, .food-form button {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+        }
+
+        .food-form select {
+            flex: 1 1 300px;
+        }
+
+        .food-form input {
+            flex: 1 1 150px;
+        }
+
+        .food-form button {
+            background-color: #28a745;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            flex: 0 1 150px;
+            transition: background-color 0.3s ease;
+        }
+
+        .food-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Table Styling */
+        .scrollable-table {
+            overflow-x: auto;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1800px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #333333;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        /* Totals Section Styling */
+        .totals {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .totals h2 {
+            margin-bottom: 15px;
+            color: #333333;
+        }
+
+        .totals p {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            table {
+                min-width: 1500px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            table {
+                min-width: 1300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .food-form {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .food-form select, .food-form input, .food-form button {
+                flex: 1 1 100%;
+                max-width: 100%;
+            }
+
+            table {
+                min-width: 100%;
+            }
+
+            th, td {
+                font-size: 12px;
+                padding: 6px;
+            }
+
+            .totals p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Personal Nutrition Tracker</h1>
+
+    <!-- Food Addition Form -->
+    <div class="food-form">
+        <!-- Predefined Food Selection -->
+        <select id="food-select">
+            <option value="" disabled selected>Select a Food Item</option>
+            <!-- Predefined food items will be populated here -->
+        </select>
+
+        <!-- Custom Caloric Input -->
+        <input type="number" id="custom-calories" placeholder="Custom Calories">
+
+        <!-- Custom Protein Input -->
+        <input type="number" id="custom-protein" placeholder="Custom Protein (g)">
+
+        <!-- Add Food Button -->
+        <button id="add-food-btn">Add Food</button>
+    </div>
+
+    <!-- Nutrition Table -->
+    <div class="scrollable-table">
+        <table id="food-table">
+            <thead>
+                <tr>
+                    <th>Food Item</th>
+                    <th>Calories (kcal)</th>
+                    <th>Protein (g)</th>
+                    <th>Carbohydrates (g)</th>
+                    <th>Fats (g)</th>
+                    <th>Fiber (g)</th>
+                    <th>Sugars (g)</th>
+                    <th>Vitamin A (mcg)</th>
+                    <th>Vitamin C (mg)</th>
+                    <th>Vitamin D (mcg)</th>
+                    <th>Vitamin E (mg)</th>
+                    <th>Vitamin K (µg)</th>
+                    <th>Thiamin (B1) (mg)</th>
+                    <th>Riboflavin (B2) (mg)</th>
+                    <th>Niacin (B3) (mg)</th>
+                    <th>Vitamin B6 (mg)</th>
+                    <th>Folate (B9) (µg DFE)</th>
+                    <th>Vitamin B12 (µg)</th>
+                    <th>Biotin (µg)</th>
+                    <th>Pantothenic Acid (mg)</th>
+                    <th>Calcium (mg)</th>
+                    <th>Iron (mg)</th>
+                    <th>Iodine (mcg)</th>
+                    <th>Magnesium (mg)</th>
+                    <th>Zinc (mg)</th>
+                    <th>Selenium (µg)</th>
+                    <th>Copper (mg)</th>
+                    <th>Manganese (mg)</th>
+                    <th>Chromium (mcg)</th>
+                    <th>Phosphorus (mg)</th>
+                    <th>Lycopene (mcg)</th>
+                    <th>Cocoa Flavanols (mg)</th>
+                    <th>Caffeine (mg)</th>
+                    <th>Creatine Monohydrate (g)</th>
+                    <th>Hydrolyzed Bovine Collagen (g)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Food items will be added here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals Section -->
+    <div class="totals">
+        <h2>Daily Totals</h2>
+        <p><strong>Calories:</strong> <span id="total-calories">0</span> kcal</p>
+        <p><strong>Protein:</strong> <span id="total-protein">0</span> g</p>
+        <p><strong>Carbohydrates:</strong> <span id="total-carbs">0</span> g</p>
+        <p><strong>Fats:</strong> <span id="total-fats">0</span> g</p>
+        <p><strong>Fiber:</strong> <span id="total-fiber">0</span> g</p>
+        <p><strong>Sugars:</strong> <span id="total-sugars">0</span> g</p>
+        <p><strong>Vitamin A:</strong> <span id="total-vitaminA">0</span> mcg</p>
+        <p><strong>Vitamin C:</strong> <span id="total-vitaminC">0</span> mg</p>
+        <p><strong>Vitamin D:</strong> <span id="total-vitaminD">0</span> mcg</p>
+        <p><strong>Vitamin E:</strong> <span id="total-vitaminE">0</span> mg</p>
+        <p><strong>Vitamin K:</strong> <span id="total-vitaminK">0</span> µg</p>
+        <p><strong>Thiamin (B1):</strong> <span id="total-thiamin">0</span> mg</p>
+        <p><strong>Riboflavin (B2):</strong> <span id="total-riboflavin">0</span> mg</p>
+        <p><strong>Niacin (B3):</strong> <span id="total-niacin">0</span> mg</p>
+        <p><strong>Vitamin B6:</strong> <span id="total-vitaminB6">0</span> mg</p>
+        <p><strong>Folate (B9):</strong> <span id="total-folate">0</span> µg DFE</p>
+        <p><strong>Vitamin B12:</strong> <span id="total-vitaminB12">0</span> µg</p>
+        <p><strong>Biotin:</strong> <span id="total-biotin">0</span> µg</p>
+        <p><strong>Pantothenic Acid:</strong> <span id="total-pantothenic">0</span> mg</p>
+        <p><strong>Calcium:</strong> <span id="total-calcium">0</span> mg</p>
+        <p><strong>Iron:</strong> <span id="total-iron">0</span> mg</p>
+        <p><strong>Iodine:</strong> <span id="total-iodine">0</span> mcg</p>
+        <p><strong>Magnesium:</strong> <span id="total-magnesium">0</span> mg</p>
+        <p><strong>Zinc:</strong> <span id="total-zinc">0</span> mg</p>
+        <p><strong>Selenium:</strong> <span id="total-selenium">0</span> µg</p>
+        <p><strong>Copper:</strong> <span id="total-copper">0</span> mg</p>
+        <p><strong>Manganese:</strong> <span id="total-manganese">0</span> mg</p>
+        <p><strong>Chromium:</strong> <span id="total-chromium">0</span> mcg</p>
+        <p><strong>Phosphorus:</strong> <span id="total-phosphorus">0</span> mg</p>
+        <p><strong>Lycopene:</strong> <span id="total-lycopene">0</span> mcg</p>
+        <p><strong>Cocoa Flavanols:</strong> <span id="total-cocoaFlavanols">0</span> mg</p>
+        <p><strong>Caffeine:</strong> <span id="total-caffeine">0</span> mg</p>
+        <p><strong>Creatine Monohydrate:</strong> <span id="total-creatine">0</span> g</p>
+        <p><strong>Hydrolyzed Bovine Collagen:</strong> <span id="total-collagen">0</span> g</p>
+    </div>
+</div>
+
+<script>
+    // Nutrition data for predefined food items
+    const nutritionData = [
+        {
+            name: "Banana (1)",
+            calories: 105,
+            protein: 1.3,
+            carbohydrates: 27,
+            fats: 0.4,
+            fiber: 3.1,
+            sugars: 14,
+            vitaminA: 64,
+            vitaminC: 10.3,
+            vitaminD: 0,
+            vitaminE: 0.1,
+            vitaminK: 0.5,
+            thiamin: 0.04,
+            riboflavin: 0.07,
+            niacin: 0.8,
+            vitaminB6: 0.4,
+            folate: 24,
+            vitaminB12: 0,
+            biotin: 2,
+            pantothenic: 0.3,
+            calcium: 5,
+            iron: 0.3,
+            iodine: 2,
+            magnesium: 32,
+            zinc: 0.2,
+            selenium: 1,
+            copper: 0.05,
+            manganese: 0.3,
+            chromium: 0.7,
+            phosphorus: 22,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Egg Whites (230g)",
+            calories: 115,
+            protein: 25.9,
+            carbohydrates: 0.6,
+            fats: 0.3,
+            fiber: 0,
+            sugars: 0.3,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0,
+            vitaminK: 0,
+            thiamin: 0.03,
+            riboflavin: 0.05,
+            niacin: 0.1,
+            vitaminB6: 0.03,
+            folate: 10,
+            vitaminB12: 0.1,
+            biotin: 0,
+            pantothenic: 0.3,
+            calcium: 0,
+            iron: 0,
+            iodine: 0,
+            magnesium: 0,
+            zinc: 0,
+            selenium: 0,
+            copper: 0,
+            manganese: 0,
+            chromium: 0,
+            phosphorus: 0,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Chicken Breast (100g)",
+            calories: 165,
+            protein: 31,
+            carbohydrates: 0,
+            fats: 3.6,
+            fiber: 0,
+            sugars: 0,
+            vitaminA: 13,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0.3,
+            vitaminK: 1.3,
+            thiamin: 0.07,
+            riboflavin: 0.12,
+            niacin: 13.4,
+            vitaminB6: 0.6,
+            folate: 4,
+            vitaminB12: 0.3,
+            biotin: 1,
+            pantothenic: 1.0,
+            calcium: 15,
+            iron: 0.9,
+            iodine: 3,
+            magnesium: 29,
+            zinc: 1,
+            selenium: 24,
+            copper: 0.04,
+            manganese: 0,
+            chromium: 0.1,
+            phosphorus: 220,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0.4,
+            collagen: 0
+        },
+        {
+            name: "Tofu (100g)",
+            calories: 76,
+            protein: 8,
+            carbohydrates: 1.9,
+            fats: 4.8,
+            fiber: 0.5,
+            sugars: 0.3,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0.2,
+            vitaminK: 0.6,
+            thiamin: 0.05,
+            riboflavin: 0.1,
+            niacin: 0.3,
+            vitaminB6: 0.05,
+            folate: 12,
+            vitaminB12: 0,
+            biotin: 1,
+            pantothenic: 0.3,
+            calcium: 120,
+            iron: 1.2,
+            iodine: 0,
+            magnesium: 12,
+            zinc: 0.6,
+            selenium: 2,
+            copper: 0.04,
+            manganese: 0.1,
+            chromium: 0.1,
+            phosphorus: 36,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Tempeh (100g)",
+            calories: 192,
+            protein: 20.3,
+            carbohydrates: 9.4,
+            fats: 10.8,
+            fiber: 1.4,
+            sugars: 0.5,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0.4,
+            vitaminK: 0.5,
+            thiamin: 0.2,
+            riboflavin: 0.3,
+            niacin: 4.5,
+            vitaminB6: 0.1,
+            folate: 25,
+            vitaminB12: 0,
+            biotin: 0.5,
+            pantothenic: 0.6,
+            calcium: 111,
+            iron: 2.7,
+            iodine: 0,
+            magnesium: 81,
+            zinc: 1.5,
+            selenium: 9,
+            copper: 0.5,
+            manganese: 0.7,
+            chromium: 2,
+            phosphorus: 162,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Japanese Purple Potato (50g)",
+            calories: 42,
+            protein: 0.9,
+            carbohydrates: 9.8,
+            fats: 0.1,
+            fiber: 1.2,
+            sugars: 1.3,
+            vitaminA: 0,
+            vitaminC: 7.2,
+            vitaminD: 0,
+            vitaminE: 0.05,
+            vitaminK: 0.2,
+            thiamin: 0.02,
+            riboflavin: 0.02,
+            niacin: 0.3,
+            vitaminB6: 0.04,
+            folate: 12,
+            vitaminB12: 0,
+            biotin: 0.3,
+            pantothenic: 0.2,
+            calcium: 4,
+            iron: 0.3,
+            iodine: 1,
+            magnesium: 8,
+            zinc: 0.2,
+            selenium: 0.5,
+            copper: 0.02,
+            manganese: 0.1,
+            chromium: 0.1,
+            phosphorus: 24,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Quinoa (75g)",
+            calories: 277,
+            protein: 9.6,
+            carbohydrates: 49.2,
+            fats: 4.3,
+            fiber: 5.2,
+            sugars: 1.6,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0.6,
+            vitaminK: 0.6,
+            thiamin: 0.2,
+            riboflavin: 0.1,
+            niacin: 1.5,
+            vitaminB6: 0.1,
+            folate: 78,
+            vitaminB12: 0,
+            biotin: 0.4,
+            pantothenic: 0.7,
+            calcium: 47,
+            iron: 2.8,
+            iodine: 0,
+            magnesium: 118,
+            zinc: 2.0,
+            selenium: 4.8,
+            copper: 0.3,
+            manganese: 1.0,
+            chromium: 0.3,
+            phosphorus: 221,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Shelled Edamame (1 cup)",
+            calories: 189,
+            protein: 18.5,
+            carbohydrates: 15.4,
+            fats: 8.1,
+            fiber: 8.1,
+            sugars: 3.1,
+            vitaminA: 0,
+            vitaminC: 10.3,
+            vitaminD: 0,
+            vitaminE: 0.9,
+            vitaminK: 0,
+            thiamin: 0.2,
+            riboflavin: 0.1,
+            niacin: 1.5,
+            vitaminB6: 0.3,
+            folate: 120,
+            vitaminB12: 0,
+            biotin: 1.5,
+            pantothenic: 1.0,
+            calcium: 98,
+            iron: 3.5,
+            iodine: 0,
+            magnesium: 99,
+            zinc: 2.0,
+            selenium: 3,
+            copper: 0.2,
+            manganese: 0.8,
+            chromium: 1,
+            phosphorus: 278,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Green Peas (1 cup)",
+            calories: 117,
+            protein: 8.6,
+            carbohydrates: 21.2,
+            fats: 0.6,
+            fiber: 7.6,
+            sugars: 8.3,
+            vitaminA: 64,
+            vitaminC: 60.8,
+            vitaminD: 0,
+            vitaminE: 0.7,
+            vitaminK: 45.4,
+            thiamin: 0.4,
+            riboflavin: 0.1,
+            niacin: 2.5,
+            vitaminB6: 0.2,
+            folate: 101,
+            vitaminB12: 0,
+            biotin: 0.3,
+            pantothenic: 0.6,
+            calcium: 41,
+            iron: 2.3,
+            iodine: 0,
+            magnesium: 48,
+            zinc: 1.2,
+            selenium: 1,
+            copper: 0.2,
+            manganese: 0.3,
+            chromium: 0.2,
+            phosphorus: 96,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Broccoli (100g)",
+            calories: 55,
+            protein: 3.7,
+            carbohydrates: 11.2,
+            fats: 0.6,
+            fiber: 3.8,
+            sugars: 2.2,
+            vitaminA: 623,
+            vitaminC: 89.2,
+            vitaminD: 0,
+            vitaminE: 0.8,
+            vitaminK: 101.6,
+            thiamin: 0.07,
+            riboflavin: 0.11,
+            niacin: 1.1,
+            vitaminB6: 0.2,
+            folate: 63,
+            vitaminB12: 0,
+            biotin: 0.3,
+            pantothenic: 0.6,
+            calcium: 47,
+            iron: 0.7,
+            iodine: 0,
+            magnesium: 21,
+            zinc: 0.4,
+            selenium: 2.5,
+            copper: 0.05,
+            manganese: 0.2,
+            chromium: 0.2,
+            phosphorus: 66,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Broccoli (200g)",
+            calories: 110,
+            protein: 7.4,
+            carbohydrates: 22.4,
+            fats: 1.2,
+            fiber: 7.6,
+            sugars: 4.4,
+            vitaminA: 1246,
+            vitaminC: 178.4,
+            vitaminD: 0,
+            vitaminE: 1.6,
+            vitaminK: 203.2,
+            thiamin: 0.14,
+            riboflavin: 0.22,
+            niacin: 2.2,
+            vitaminB6: 0.4,
+            folate: 126,
+            vitaminB12: 0,
+            biotin: 0.6,
+            pantothenic: 1.2,
+            calcium: 94,
+            iron: 1.4,
+            iodine: 0,
+            magnesium: 42,
+            zinc: 0.8,
+            selenium: 5,
+            copper: 0.1,
+            manganese: 0.4,
+            chromium: 0.4,
+            phosphorus: 132,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Chocolate Vegan Protein Shake",
+            calories: 270,
+            protein: 40,
+            carbohydrates: 23,
+            fats: 5.5,
+            fiber: 11,
+            sugars: 1,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0,
+            vitaminK: 0,
+            thiamin: 0,
+            riboflavin: 0,
+            niacin: 0,
+            vitaminB6: 0,
+            folate: 0,
+            vitaminB12: 0,
+            biotin: 0,
+            pantothenic: 0,
+            calcium: 60,
+            iron: 5.8,
+            iodine: 0,
+            magnesium: 0,
+            zinc: 0,
+            selenium: 0,
+            copper: 0,
+            manganese: 0,
+            chromium: 0,
+            phosphorus: 0,
+            lycopene: 0,
+            cocoaFlavanols: 500,
+            caffeine: 30,
+            creatine: 5,
+            collagen: 15
+        },
+        {
+            name: "Homemade Protein Cookie",
+            calories: 148,
+            protein: 9.93,
+            carbohydrates: 15.65,
+            fats: 5.82,
+            fiber: 4.26,
+            sugars: 2.15,
+            vitaminA: 0,
+            vitaminC: 1.09,
+            vitaminD: 0,
+            vitaminE: 0.57,
+            vitaminK: 0,
+            thiamin: 0,
+            riboflavin: 0,
+            niacin: 0,
+            vitaminB6: 0.07,
+            folate: 0,
+            vitaminB12: 0,
+            biotin: 0,
+            pantothenic: 0,
+            calcium: 39.42,
+            iron: 2.05,
+            iodine: 0,
+            magnesium: 66.28,
+            zinc: 0.54,
+            selenium: 0,
+            copper: 0,
+            manganese: 0,
+            chromium: 0,
+            phosphorus: 151.2,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Daily Multivitamin",
+            calories: 0,
+            protein: 0,
+            carbohydrates: 0,
+            fats: 0,
+            fiber: 0,
+            sugars: 0,
+            vitaminA: 900,
+            vitaminC: 99,
+            vitaminD: 25,
+            vitaminE: 15,
+            vitaminK: 0,
+            thiamin: 1.32,
+            riboflavin: 1.43,
+            niacin: 17.6,
+            vitaminB6: 2.17,
+            folate: 400,
+            vitaminB12: 6.24,
+            biotin: 43,
+            pantothenic: 15.5,
+            calcium: 210,
+            iron: 0,
+            iodine: 150,
+            magnesium: 120,
+            zinc: 11,
+            selenium: 55,
+            copper: 0.9,
+            manganese: 2.3,
+            chromium: 35,
+            phosphorus: 0,
+            lycopene: 300,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Fage Greek Yogurt",
+            calories: 90,
+            protein: 18,
+            carbohydrates: 5,
+            fats: 0,
+            fiber: 0,
+            sugars: 5,
+            vitaminA: 0,
+            vitaminC: 1.09,
+            vitaminD: 0,
+            vitaminE: 0,
+            vitaminK: 0,
+            thiamin: 0,
+            riboflavin: 0,
+            niacin: 0,
+            vitaminB6: 0,
+            folate: 0,
+            vitaminB12: 0,
+            biotin: 0,
+            pantothenic: 0,
+            calcium: 200,
+            iron: 0,
+            iodine: 0,
+            magnesium: 0,
+            zinc: 0,
+            selenium: 0,
+            copper: 0,
+            manganese: 0,
+            chromium: 0,
+            phosphorus: 0,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        },
+        {
+            name: "Tuna Packet",
+            calories: 100,
+            protein: 24,
+            carbohydrates: 0,
+            fats: 0,
+            fiber: 0,
+            sugars: 0,
+            vitaminA: 0,
+            vitaminC: 0,
+            vitaminD: 0,
+            vitaminE: 0,
+            vitaminK: 0,
+            thiamin: 0,
+            riboflavin: 0,
+            niacin: 0,
+            vitaminB6: 0,
+            folate: 0,
+            vitaminB12: 0,
+            biotin: 0,
+            pantothenic: 0,
+            calcium: 0,
+            iron: 0.72,
+            iodine: 0,
+            magnesium: 0,
+            zinc: 0,
+            selenium: 0,
+            copper: 0,
+            manganese: 0,
+            chromium: 0,
+            phosphorus: 0,
+            lycopene: 0,
+            cocoaFlavanols: 0,
+            caffeine: 0,
+            creatine: 0,
+            collagen: 0
+        }
+    ];
+
+    // Populate the food select dropdown
+    const foodSelect = document.getElementById('food-select');
+    nutritionData.forEach((food, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = food.name;
+        foodSelect.appendChild(option);
+    });
+
+    // Initialize totals
+    const totals = {
+        calories: 0,
+        protein: 0,
+        carbohydrates: 0,
+        fats: 0,
+        fiber: 0,
+        sugars: 0,
+        vitaminA: 0,
+        vitaminC: 0,
+        vitaminD: 0,
+        vitaminE: 0,
+        vitaminK: 0,
+        thiamin: 0,
+        riboflavin: 0,
+        niacin: 0,
+        vitaminB6: 0,
+        folate: 0,
+        vitaminB12: 0,
+        biotin: 0,
+        pantothenic: 0,
+        calcium: 0,
+        iron: 0,
+        iodine: 0,
+        magnesium: 0,
+        zinc: 0,
+        selenium: 0,
+        copper: 0,
+        manganese: 0,
+        chromium: 0,
+        phosphorus: 0,
+        lycopene: 0,
+        cocoaFlavanols: 0,
+        caffeine: 0,
+        creatine: 0,
+        collagen: 0
+    };
+
+    // Handle Add Food button click
+    document.getElementById('add-food-btn').addEventListener('click', () => {
+        const selectedIndex = foodSelect.value;
+        const customCalories = parseFloat(document.getElementById('custom-calories').value) || 0;
+        const customProtein = parseFloat(document.getElementById('custom-protein').value) || 0;
+
+        if (selectedIndex === "" && customCalories === 0 && customProtein === 0) {
+            alert("Please select a predefined food item or enter custom calories and/or protein.");
+            return;
+        }
+
+        if (selectedIndex !== "" && (customCalories !== 0 || customProtein !== 0)) {
+            alert("Please either select a predefined food item or enter custom calories/protein, not both.");
+            return;
+        }
+
+        if (selectedIndex !== "") {
+            const food = nutritionData[selectedIndex];
+            // Add the food item to the table
+            addFoodToTable(food);
+            // Update totals
+            updateTotals(food);
+            // Reset the form
+            foodSelect.value = "";
+        } else {
+            // Create a custom food entry
+            const customFood = {
+                name: "Custom Entry",
+                calories: customCalories,
+                protein: customProtein,
+                carbohydrates: 0,
+                fats: 0,
+                fiber: 0,
+                sugars: 0,
+                vitaminA: 0,
+                vitaminC: 0,
+                vitaminD: 0,
+                vitaminE: 0,
+                vitaminK: 0,
+                thiamin: 0,
+                riboflavin: 0,
+                niacin: 0,
+                vitaminB6: 0,
+                folate: 0,
+                vitaminB12: 0,
+                biotin: 0,
+                pantothenic: 0,
+                calcium: 0,
+                iron: 0,
+                iodine: 0,
+                magnesium: 0,
+                zinc: 0,
+                selenium: 0,
+                copper: 0,
+                manganese: 0,
+                chromium: 0,
+                phosphorus: 0,
+                lycopene: 0,
+                cocoaFlavanols: 0,
+                caffeine: 0,
+                creatine: 0,
+                collagen: 0
+            };
+            // Add the custom food item to the table
+            addFoodToTable(customFood);
+            // Update totals
+            updateTotals(customFood);
+            // Reset custom inputs
+            document.getElementById('custom-calories').value = "";
+            document.getElementById('custom-protein').value = "";
+        }
+    });
+
+    // Function to add food to the table
+    function addFoodToTable(food) {
+        const tableBody = document.querySelector('#food-table tbody');
+        const row = document.createElement('tr');
+
+        // Food Item Name
+        const nameCell = document.createElement('td');
+        nameCell.textContent = food.name;
+        row.appendChild(nameCell);
+
+        // Iterate through each nutrient except 'name'
+        for (const key in food) {
+            if (key !== "name") {
+                const cell = document.createElement('td');
+                cell.textContent = food[key];
+                row.appendChild(cell);
+            }
+        }
+
+        tableBody.appendChild(row);
+    }
+
+    // Function to update totals
+    function updateTotals(food) {
+        totals.calories += food.calories;
+        totals.protein += food.protein;
+        totals.carbohydrates += food.carbohydrates;
+        totals.fats += food.fats;
+        totals.fiber += food.fiber;
+        totals.sugars += food.sugars;
+        totals.vitaminA += food.vitaminA;
+        totals.vitaminC += food.vitaminC;
+        totals.vitaminD += food.vitaminD;
+        totals.vitaminE += food.vitaminE;
+        totals.vitaminK += food.vitaminK;
+        totals.thiamin += food.thiamin;
+        totals.riboflavin += food.riboflavin;
+        totals.niacin += food.niacin;
+        totals.vitaminB6 += food.vitaminB6;
+        totals.folate += food.folate;
+        totals.vitaminB12 += food.vitaminB12;
+        totals.biotin += food.biotin;
+        totals.pantothenic += food.pantothenic;
+        totals.calcium += food.calcium;
+        totals.iron += food.iron;
+        totals.iodine += food.iodine;
+        totals.magnesium += food.magnesium;
+        totals.zinc += food.zinc;
+        totals.selenium += food.selenium;
+        totals.copper += food.copper;
+        totals.manganese += food.manganese;
+        totals.chromium += food.chromium;
+        totals.phosphorus += food.phosphorus;
+        totals.lycopene += food.lycopene;
+        totals.cocoaFlavanols += food.cocoaFlavanols;
+        totals.caffeine += food.caffeine;
+        totals.creatine += food.creatine;
+        totals.collagen += food.collagen;
+
+        // Update the display
+        document.getElementById('total-calories').textContent = totals.calories.toFixed(2);
+        document.getElementById('total-protein').textContent = totals.protein.toFixed(2);
+        document.getElementById('total-carbs').textContent = totals.carbohydrates.toFixed(2);
+        document.getElementById('total-fats').textContent = totals.fats.toFixed(2);
+        document.getElementById('total-fiber').textContent = totals.fiber.toFixed(2);
+        document.getElementById('total-sugars').textContent = totals.sugars.toFixed(2);
+        document.getElementById('total-vitaminA').textContent = totals.vitaminA.toFixed(2);
+        document.getElementById('total-vitaminC').textContent = totals.vitaminC.toFixed(2);
+        document.getElementById('total-vitaminD').textContent = totals.vitaminD.toFixed(2);
+        document.getElementById('total-vitaminE').textContent = totals.vitaminE.toFixed(2);
+        document.getElementById('total-vitaminK').textContent = totals.vitaminK.toFixed(2);
+        document.getElementById('total-thiamin').textContent = totals.thiamin.toFixed(2);
+        document.getElementById('total-riboflavin').textContent = totals.riboflavin.toFixed(2);
+        document.getElementById('total-niacin').textContent = totals.niacin.toFixed(2);
+        document.getElementById('total-vitaminB6').textContent = totals.vitaminB6.toFixed(2);
+        document.getElementById('total-folate').textContent = totals.folate.toFixed(2);
+        document.getElementById('total-vitaminB12').textContent = totals.vitaminB12.toFixed(2);
+        document.getElementById('total-biotin').textContent = totals.biotin.toFixed(2);
+        document.getElementById('total-pantothenic').textContent = totals.pantothenic.toFixed(2);
+        document.getElementById('total-calcium').textContent = totals.calcium.toFixed(2);
+        document.getElementById('total-iron').textContent = totals.iron.toFixed(2);
+        document.getElementById('total-iodine').textContent = totals.iodine.toFixed(2);
+        document.getElementById('total-magnesium').textContent = totals.magnesium.toFixed(2);
+        document.getElementById('total-zinc').textContent = totals.zinc.toFixed(2);
+        document.getElementById('total-selenium').textContent = totals.selenium.toFixed(2);
+        document.getElementById('total-copper').textContent = totals.copper.toFixed(2);
+        document.getElementById('total-manganese').textContent = totals.manganese.toFixed(2);
+        document.getElementById('total-chromium').textContent = totals.chromium.toFixed(2);
+        document.getElementById('total-phosphorus').textContent = totals.phosphorus.toFixed(2);
+        document.getElementById('total-lycopene').textContent = totals.lycopene.toFixed(2);
+        document.getElementById('total-cocoaFlavanols').textContent = totals.cocoaFlavanols.toFixed(2);
+        document.getElementById('total-caffeine').textContent = totals.caffeine.toFixed(2);
+        document.getElementById('total-creatine').textContent = totals.creatine.toFixed(2);
+        document.getElementById('total-collagen').textContent = totals.collagen.toFixed(2);
+    }
+</script>
+
+</body>
+</html>
